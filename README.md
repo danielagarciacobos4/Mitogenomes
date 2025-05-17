@@ -1,7 +1,7 @@
 # Mitogenomes
 
 
-# 1) mapeando los raw reads con el metagenoma
+## 1) mapeando los raw reads con el metagenoma
 
 #!/bin/bash
 #SBATCH --job-name=mitogenome_boitata
@@ -28,7 +28,7 @@ Helicops_boitata_CHUNB_83210_R2_clean.fastq.gz > boitata_mapped.sam
  
  hagmanni_mapped.sam
  
- # 2) transformando el .sam file a un .bam file 
+ ## 2) transformando el .sam file a un .bam file 
  
 #!/bin/bash
 #SBATCH --job-name=sam_boitata
@@ -44,25 +44,25 @@ Helicops_boitata_CHUNB_83210_R2_clean.fastq.gz > boitata_mapped.sam
 source ~/.bash_profile
 module load Samtools/samtools-1.11
 
-# Cambiar al directorio de trabajo
+## Cambiar al directorio de trabajo
 cd /home/dgarcia/mendel-nas1/short_reads/mitogenomes
 
 
-# 1. Convertir SAM a BAM
+## 1. Convertir SAM a BAM
 samtools view -@ 14 -bS boitata_mapped.sam > boitata_mapped.bam
 
-# 2. Ordenar el BAM
+## 2. Ordenar el BAM
 samtools sort -@ 14 -o boitata_mapped.sorted.bam boitata_mapped.bam
 
-# 3. Filtrar por MAPQ ≥ 30
+## 3. Filtrar por MAPQ ≥ 30
 samtools view -@ 14 -b -q 30 boitata_mapped.sorted.bam > boitata_mapped.filtered.bam
 
-# 4. Indexar el BAM filtrado (opcional pero recomendado)
+## 4. Indexar el BAM filtrado (opcional pero recomendado)
 samtools index boitata_mapped.filtered.bam
  
  
  
- # 3) estamos haciendo un genoma consenso:
+ ## 3) estamos haciendo un genoma consenso:
  
 #!/bin/bash
 #SBATCH --job-name=sam_boitata
@@ -95,7 +95,7 @@ bcftools consensus -f "$REF" "$VCF" > "$CONSENSO"
 
 echo " Secuencia consenso creada: $CONSENSO"
 
-# Otros comando para mirar la cualidad del genoma:
+## Otros comando para mirar la cualidad del genoma:
 
 metricas para pillar que tan bien quedaron alineados los mitogenomas 
 
@@ -106,7 +106,7 @@ b) Cobertura por posición:
 samtools depth -a mapped.filtered.bam > cobertura.txt
 samtools depth -a Helicops_hagmanni_CHUNB_83215_mapped.filtered.bam > hagmanni.cobertura.txt
 
-# Luego calculamos la cobertura promedio
+## Luego calculamos la cobertura promedio
 
 awk '{sum+=$3} END { print "Cobertura promedio:",sum/NR }' cobertura.txt
 awk '{sum+=$3} END { print "Cobertura promedio:",sum/NR }' cobertura.txt
